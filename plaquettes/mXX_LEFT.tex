@@ -4,9 +4,7 @@
 \usepackage{tikz}
 
 \begin{document}
-\begin{tikzpicture}
-\draw[draw=black, thick, fill=PlaquetteRed] (0,1) -- (0,0) arc(270:90:1) --cycle;
-\node[font=\plaquetteFontSize,align=center,anchor=north east] at (0,2) {2};
-\node[font=\plaquetteFontSize,align=center,anchor=south east] at (0,0) {4};
-\end{tikzpicture}
+\squarePlaquette{PlaquetteRed}%
+{}{}{}{} {}{X}{2}{P}%
+{}{}{}{} {}{X}{4}{P}
 \end{document}

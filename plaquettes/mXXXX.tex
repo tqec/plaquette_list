@@ -4,11 +4,7 @@
 \usepackage{tikz}
 
 \begin{document}
-\begin{tikzpicture}
-\draw[draw=black, thick, fill=PlaquetteRed] (0,0) rectangle (2,2);
-\node[font=\plaquetteFontSize,align=center,anchor=north west] at (0,2) {1};
-\node[font=\plaquetteFontSize,align=center,anchor=north east] at (2,2) {2};
-\node[font=\plaquetteFontSize,align=center,anchor=south west] at (0,0) {3};
-\node[font=\plaquetteFontSize,align=center,anchor=south east] at (2,0) {4};
-\end{tikzpicture}
+\squarePlaquette{PlaquetteRed}%
+{}{X}{1}{P} {}{X}{2}{P}%
+{}{X}{3}{P} {}{X}{4}{P}
 \end{document}

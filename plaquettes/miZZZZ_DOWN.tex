@@ -4,8 +4,7 @@
 \usepackage{tikz}
 
 \begin{document}
-\begin{tikzpicture}
-\draw[draw=black, thick, fill=PlaquetteMissing] (0,0) rectangle (2,2);
-\node[font=\plaquetteFontSize,align=center] at (1,1) {MISSING};
-\end{tikzpicture}
+\squarePlaquette{PlaquetteBlue}%
+{P}{Z}{1}{} {P}{Z}{3}{}%
+{}{Z}{2}{} {}{Z}{4}{}
 \end{document}
