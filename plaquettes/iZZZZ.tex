@@ -1,0 +1,14 @@
+\documentclass{standalone}
+
+\input{constants}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}
+\draw[draw=black, thick, fill=PlaquetteBlue] (0,0) rectangle (2,2);
+\node[font=\plaquetteFontSize,align=center,anchor=north west] at (0,2) {1};
+\node[font=\plaquetteFontSize,align=center,anchor=south west] at (0,0) {2};
+\node[font=\plaquetteFontSize,align=center,anchor=north east] at (2,2) {3};
+\node[font=\plaquetteFontSize,align=center,anchor=south east] at (2,0) {4};
+\end{tikzpicture}
+\end{document}

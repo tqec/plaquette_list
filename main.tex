@@ -1,0 +1,451 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{subcaption}
+\usepackage{pgffor}
+\usepackage{underscore}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{hyperref}
+
+% https://tex.stackexchange.com/a/96468/166093
+\usepackage[export]{adjustbox} % Max width in include graphics
+% \newcommand{\insertPlaquette}[1]{%
+% \begin{figure}
+%     \centering
+%     \begin{subfigure}[b]{.3\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth, max height=\textwidth]{plaquettes/pdf/#1.pdf}
+%         \caption{\texttt{#1} plaquette}
+%         \label{fig:#1-plaquette}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{.65\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{circuits/pdf/#1.pdf}
+%         \caption{\texttt{#1} circuit}
+%         \label{fig:#1-circuit}
+%     \end{subfigure}
+%     \caption{\texttt{#1} plaquette and circuit}
+%     \label{fig:#1-combined}
+% \end{figure}
+% }
+\newcommand{\insertPlaquette}[1]{%
+    \label{tabrow:#1} &%
+    \includegraphics[width=\linewidth, max height=\linewidth]{plaquettes/pdf/#1.pdf} &%
+    \includegraphics[width=\linewidth, max height=.09\paperheight]{circuits/pdf/#1.pdf}
+}
+% Easily adding plaquettes to the table
+\newcommand{\internalTableLine}[3]{\texttt{#1} & \texttt{#2} & #3 & Row \ref{tabrow:#1}}
+% \newcommand{\internalTableLine}[3]{\texttt{#1} & \texttt{#2} & #3 & }
+
+% Add ability to reference rows of tables
+% See https://tex.stackexchange.com/a/356817/166093
+\newcounter{rowcntr}[table]
+\renewcommand{\therowcntr}{\thetable.\arabic{rowcntr}}
+
+% A new columntype to apply automatic stepping
+\newcolumntype{N}{>{\refstepcounter{rowcntr}\therowcntr}c}
+
+% Reset the rowcntr counter at each new tabular
+\AtBeginEnvironment{longtable}{\setcounter{rowcntr}{0}}
+
+% Easily adding plaquette graphics to the table
+%% New column, define the width as #1, the m-column will align all
+%% content in ther vertical middle, \centering will align it in the
+%% horizontal middle.
+% See https://tex.stackexchange.com/a/345214/166093
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+
+\title{All plaquettes}
+\author{Adrien Suau}
+\date{November 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Plaquette table}
+
+\subsection{Explanation of prefixes, stabilizers and suffixes}
+
+\paragraph{Stabilizers} are the main part of each plaquette name. Only 4 values are currently used:
+
+\begin{enumerate}
+\item \texttt{XX} for 2-qubit \texttt{X} stabilizers,
+\item \texttt{ZZ} for 2-qubit \texttt{Z} stabilizers,
+\item \texttt{XXXX} for 4-qubit \texttt{X} stabilizers,
+\item \texttt{ZZZZ} for 4-qubit \texttt{Z} stabilizers,
+\end{enumerate}
+
+\paragraph{Prefixes} are always located before the stabilizer string in any plaquette name.
+The following values are allowed:
+
+\begin{center}
+\begin{tabular}{|l|p{.8\textwidth}|}
+    \hline
+    Prefix & Signification \\
+    \hline 
+    \texttt{<none>} & Regular memory plaquette \\
+    \hline 
+    \texttt{i} & Memory plaquette with data-qubit initialisation \\
+    \hline 
+    \texttt{m} & Memory plaquette with data-qubit measurement \\
+    \hline 
+    \texttt{mi} & Regular 4-qubit memory plaquette with the 2 data-qubit on the edge provided in \texttt{suffix} being initialised \\
+    \hline 
+    \texttt{mm} & Regular 4-qubit memory plaquette with 2 data-qubit on the edge provided in \texttt{suffix} being measured \\
+    \hline 
+    \texttt{th} & Regular memory plaquette with transversal $H$ gate \\
+    \hline
+\end{tabular}
+\end{center}
+
+\paragraph{Suffixes} are used to include a side of the plaquette in the overall name. Sides can
+only be one of:
+
+\begin{itemize}
+\item \texttt{_UP}
+\item \texttt{_DOWN}
+\item \texttt{_LEFT}
+\item \texttt{_RIGHT}
+\end{itemize}
+
+Depending on the values of \texttt{prefix} and \texttt{stabilizer}, the \texttt{suffix} 
+may have different meanings:
+
+\begin{itemize}
+\item if \texttt{stabilizer} only contains 2 characters (e.g., \texttt{XX} or \texttt{ZZ})
+    then the \texttt{suffix} contains the plaquette orientation (i.e., the side to which
+    the rounded side is pointing to).
+\item if \texttt{prefix} is \texttt{mi} or \texttt{mm} then the \texttt{suffix} contains the
+    side on which qubits are initialized (for \texttt{mi}) or measured (for \texttt{mm}).
+    Note that in that case \texttt{stabilizer} is always composed of 4 characters.
+\end{itemize}
+
+
+\subsection{List of all the plaquettes}
+\begin{longtable}{ |l|l|l|l| } 
+    % Main caption
+    \caption{Exhaustive list of plaquettes that need to be implemented in \texttt{tqec}.\label{tab:exhaustivePlaquetteList}}\\
+    % Headers
+    %% First head
+    \hline
+    \multicolumn{4}{| c |}{Begin of Table}\\
+    \hline
+    Name & Category & Required for & Plaquette \& Circuit\\
+    \hline
+    \endfirsthead
+    % Continuation head
+    \hline
+    \multicolumn{4}{| c |}{Continuation of Table \ref{tab:exhaustivePlaquetteList}}\\
+    \hline
+    Name & Category & Required for & Plaquette \& Circuit \\
+    \hline
+    \endhead
+
+    % Footers
+    %% Regular footer
+    \hline
+    \endfoot
+    %% Last footer
+    \hline
+    \multicolumn{4}{| c |}{End of Table \ref{tab:exhaustivePlaquetteList}}\\
+    \hline
+    \endlastfoot
+
+    % Actual table data
+    \internalTableLine{XXXX}{Memory}{Memory} \\
+    \internalTableLine{ZZZZ}{Memory}{Memory} \\
+    \internalTableLine{XX_UP}{Memory}{Memory} \\
+    \internalTableLine{XX_DOWN}{Memory}{Memory} \\
+    \internalTableLine{XX_LEFT}{Memory}{Memory} \\
+    \internalTableLine{XX_RIGHT}{Memory}{Memory} \\
+    \internalTableLine{ZZ_UP}{Memory}{Memory} \\
+    \internalTableLine{ZZ_DOWN}{Memory}{Memory} \\
+    \internalTableLine{ZZ_LEFT}{Memory}{Memory} \\
+    \internalTableLine{ZZ_RIGHT}{Memory}{Memory} \\
+    \hline
+    \internalTableLine{iXXXX}{Initialisation}{Memory} \\
+    \internalTableLine{iZZZZ}{Initialisation}{Memory} \\
+    \internalTableLine{iXX_UP}{Initialisation}{Memory} \\
+    \internalTableLine{iXX_DOWN}{Initialisation}{Memory} \\
+    \internalTableLine{iXX_LEFT}{Initialisation}{Memory} \\
+    \internalTableLine{iXX_RIGHT}{Initialisation}{Memory} \\
+    \internalTableLine{iZZ_UP}{Initialisation}{Memory} \\
+    \internalTableLine{iZZ_DOWN}{Initialisation}{Memory} \\
+    \internalTableLine{iZZ_LEFT}{Initialisation}{Memory} \\
+    \internalTableLine{iZZ_RIGHT}{Initialisation}{Memory} \\
+    \hline
+    \internalTableLine{mXXXX}{Measurement}{Memory} \\
+    \internalTableLine{mZZZZ}{Measurement}{Memory} \\
+    \internalTableLine{mXX_UP}{Measurement}{Memory} \\
+    \internalTableLine{mXX_DOWN}{Measurement}{Memory} \\
+    \internalTableLine{mXX_LEFT}{Measurement}{Memory} \\
+    \internalTableLine{mXX_RIGHT}{Measurement}{Memory} \\
+    \internalTableLine{mZZ_UP}{Measurement}{Memory} \\
+    \internalTableLine{mZZ_DOWN}{Measurement}{Memory} \\
+    \internalTableLine{mZZ_LEFT}{Measurement}{Memory} \\
+    \internalTableLine{mZZ_RIGHT}{Measurement}{Memory} \\
+    \hline
+    \internalTableLine{miXXXX_UP}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miXXXX_DOWN}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miXXXX_LEFT}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miXXXX_RIGHT}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miZZZZ_UP}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miZZZZ_DOWN}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miZZZZ_LEFT}{Memory \& Initialisation}{Merging} \\
+    \internalTableLine{miZZZZ_RIGHT}{Memory \& Initialisation}{Merging} \\
+    \hline
+    \internalTableLine{mmXXXX_UP}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmXXXX_DOWN}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmXXXX_LEFT}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmXXXX_RIGHT}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmZZZZ_UP}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmZZZZ_DOWN}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmZZZZ_LEFT}{Memory \& Measurement}{Splitting} \\
+    \internalTableLine{mmZZZZ_RIGHT}{Memory \& Measurement}{Splitting} \\
+    \hline
+    % \texttt{thXXXX} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thXX_UP} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thXX_DOWN} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thXX_RIGHT} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thXX_LEFT} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thZZZZ} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thZZ_UP} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thZZ_DOWN} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thZZ_RIGHT} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \texttt{thZZ_LEFT} & \texttt{Memory \& Transversal $H$} & Temporal transversal $H$ & Figure \ref{fig:XXXX-combined} \\
+    % \hline
+\end{longtable}
+
+\newpage
+\section{Plaquette details}
+
+\subsection{Memory}
+
+\begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
+    % Main caption
+    \caption{Visual representation and definition of \texttt{Memory} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:memoryPlaquetteDefinitions}}\\
+    % Headers
+    %% First head
+    \hline
+    \multicolumn{6}{|c|}{Begin of Table}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endfirsthead
+    %% Continuation head
+    \hline
+    \multicolumn{6}{|c|}{Continuation of Table \ref{tab:memoryPlaquetteDefinitions}}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endhead
+
+    % Footers
+    %% Regular footer
+    \hline
+    \endfoot
+    %% Last footer
+    \hline
+    \multicolumn{6}{|c|}{End of Table \ref{tab:memoryPlaquetteDefinitions}}\\
+    \hline
+    \endlastfoot
+
+    % Actual table data
+    \insertPlaquette{XXXX} & \insertPlaquette{ZZZZ} \\
+    \hline
+    \insertPlaquette{XX_UP} & \insertPlaquette{ZZ_UP} \\
+    \hline
+    \insertPlaquette{XX_RIGHT} & \insertPlaquette{ZZ_RIGHT}\\
+    \hline
+    \insertPlaquette{XX_DOWN} & \insertPlaquette{ZZ_DOWN} \\
+    \hline
+    \insertPlaquette{XX_LEFT} & \insertPlaquette{ZZ_LEFT} \\
+    \hline
+\end{longtable}
+
+\newpage
+\subsection{Initialisation}
+
+\begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
+    % Main caption
+    \caption{Visual representation and definition of \texttt{Initialisation} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:initialisationPlaquetteDefinitions}}\\
+    % Headers
+    %% First head
+    \hline
+    \multicolumn{6}{|c|}{Begin of Table}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endfirsthead
+    %% Continuation head
+    \hline
+    \multicolumn{6}{|c|}{Continuation of Table \ref{tab:initialisationPlaquetteDefinitions}}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endhead
+
+    % Footers
+    %% Regular footer
+    \hline
+    \endfoot
+    %% Last footer
+    \hline
+    \multicolumn{6}{|c|}{End of Table \ref{tab:initialisationPlaquetteDefinitions}}\\
+    \hline
+    \endlastfoot
+
+    % Actual table data
+    \insertPlaquette{iXXXX} & \insertPlaquette{iZZZZ} \\
+    \hline
+    \insertPlaquette{iXX_UP} & \insertPlaquette{iZZ_UP} \\
+    \hline
+    \insertPlaquette{iXX_RIGHT} & \insertPlaquette{iZZ_RIGHT}\\
+    \hline
+    \insertPlaquette{iXX_DOWN} & \insertPlaquette{iZZ_DOWN} \\
+    \hline
+    \insertPlaquette{iXX_LEFT} & \insertPlaquette{iZZ_LEFT} \\
+    \hline
+\end{longtable}
+
+\newpage
+\subsection{Measurement}
+
+\begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
+    % Main caption
+    \caption{Visual representation and definition of \texttt{Measurement} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:measurementPlaquetteDefinitions}}\\
+    % Headers
+    %% First head
+    \hline
+    \multicolumn{6}{|c|}{Begin of Table}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endfirsthead
+    %% Continuation head
+    \hline
+    \multicolumn{6}{|c|}{Continuation of Table \ref{tab:measurementPlaquetteDefinitions}}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endhead
+
+    % Footers
+    %% Regular footer
+    \hline
+    \endfoot
+    %% Last footer
+    \hline
+    \multicolumn{6}{|c|}{End of Table \ref{tab:measurementPlaquetteDefinitions}}\\
+    \hline
+    \endlastfoot
+
+    % Actual table data
+    \insertPlaquette{mXXXX} & \insertPlaquette{mZZZZ} \\
+    \hline
+    \insertPlaquette{mXX_UP} & \insertPlaquette{mZZ_UP} \\
+    \hline
+    \insertPlaquette{mXX_RIGHT} & \insertPlaquette{mZZ_RIGHT} \\
+    \hline
+    \insertPlaquette{mXX_DOWN} & \insertPlaquette{mZZ_DOWN} \\
+    \hline
+    \insertPlaquette{mXX_LEFT} & \insertPlaquette{mZZ_LEFT} \\
+    \hline
+\end{longtable}
+
+\newpage
+\subsection{Memory \& Initialisation}
+
+\begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
+% \begin{longtable}{|c|c|} 
+    % Main caption
+    \caption{Visual representation and definition of \texttt{Memory \& Initialisation} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:meminitPlaquetteDefinitions}}\\
+    % Headers
+    %% First head
+    \hline
+    \multicolumn{6}{|c|}{Begin of Table}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endfirsthead
+    %% Continuation head
+    \hline
+    \multicolumn{6}{|c|}{Continuation of Table \ref{tab:meminitPlaquetteDefinitions}}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endhead
+
+    % Footers
+    %% Regular footer
+    \hline
+    \endfoot
+    %% Last footer
+    \hline
+    \multicolumn{6}{|c|}{End of Table \ref{tab:meminitPlaquetteDefinitions}}\\
+    \hline
+    \endlastfoot
+
+    % Actual table data
+    \insertPlaquette{miXXXX_UP} & \insertPlaquette{miZZZZ_UP}\\
+    \hline
+    \insertPlaquette{miXXXX_RIGHT} & \insertPlaquette{miZZZZ_RIGHT}\\
+    \hline
+    \insertPlaquette{miXXXX_DOWN} & \insertPlaquette{miZZZZ_DOWN}\\
+    \hline
+    \insertPlaquette{miXXXX_LEFT} & \insertPlaquette{miZZZZ_LEFT}\\
+    \hline
+\end{longtable}
+
+\newpage
+\subsection{Memory \& Measurement}
+
+\begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
+% \begin{longtable}{|c|c|} 
+    % Main caption
+    \caption{Visual representation and definition of \texttt{Memory \& Measurement} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:memmeasPlaquetteDefinitions}}\\
+    % Headers
+    %% First head
+    \hline
+    \multicolumn{6}{|c|}{Begin of Table}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endfirsthead
+    %% Continuation head
+    \hline
+    \multicolumn{6}{|c|}{Continuation of Table \ref{tab:memmeasPlaquetteDefinitions}}\\
+    \hline
+    \multicolumn{1}{|c|}{Index} & Visual representation & Definition (circuit) & \multicolumn{1}{c|}{Index} & Visual representation & Definition (circuit)\\
+    \hline
+    \endhead
+
+    % Footers
+    %% Regular footer
+    \hline
+    \endfoot
+    %% Last footer
+    \hline
+    \multicolumn{6}{|c|}{End of Table \ref{tab:memmeasPlaquetteDefinitions}}\\
+    \hline
+    \endlastfoot
+
+    % Actual table data
+    \insertPlaquette{mmXXXX_UP} & \insertPlaquette{mmZZZZ_UP}\\
+    \hline
+    \insertPlaquette{mmXXXX_RIGHT} & \insertPlaquette{mmZZZZ_RIGHT}\\
+    \hline
+    \insertPlaquette{mmXXXX_DOWN} & \insertPlaquette{mmZZZZ_DOWN}\\
+    \hline
+    \insertPlaquette{mmXXXX_LEFT} & \insertPlaquette{mmZZZZ_LEFT}\\
+    \hline
+\end{longtable}
+
+
+\end{document}

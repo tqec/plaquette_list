@@ -1,0 +1,45 @@
+\usepackage[svgnames]{xcolor}
+\usepackage{ifthen}
+
+\definecolor{PlaquetteRed}{RGB}{255,127,127}
+\definecolor{PlaquetteGreen}{RGB}{99,198,118}
+\definecolor{PlaquetteBlue}{RGB}{115,150,255}
+
+\definecolor{PlaquetteMissing}{RGB}{196,0,196}
+
+\newcommand{\plaquetteFontSize}{\normalsize}
+
+% Inputs: RPNG
+%   R: Basis of the reset on data qubit (XYZ or empty)
+%   P: Pauli measured on data qubit (XYZ)
+%   N: Time-step at which the Pauli is measured (1-5)
+%   M: Basis of the measurement on data qubit (XYZ or empty)
+\newcommand{\formatDataQubitDescription}[4]{%
+\ifthenelse{ \equal {#1} {} }{\_}{#1}%
+\ifthenelse{ \equal {#2} {} }{\_}{#2}%
+\ifthenelse{ \equal {#3} {} }{\_}{#3}%
+\ifthenelse{ \equal {#4} {} }{\_}{#4}%
+}
+
+% See https://tex.stackexchange.com/a/509766/166093 for the below trick
+% Provide a way to declare and renew a command in one command
+\newcommand{\neworrenewcommand}[1]{\providecommand{#1}{}\renewcommand{#1}}
+\newcommand{\squarePlaquette}[9]{%
+\neworrenewcommand{\innerSquarePlaquette}[8]{
+\begin{tikzpicture}
+\draw[draw=black,thick,fill=#1] (0,0) rectangle (2,2);
+\node[font=\plaquetteFontSize,align=center,anchor=north west] at (0,2) {\formatDataQubitDescription{#2}{#3}{#4}{#5}};
+\node[font=\plaquetteFontSize,align=center,anchor=north east] at (2,2) {\formatDataQubitDescription{#6}{#7}{#8}{#9}};
+\node[font=\plaquetteFontSize,align=center,anchor=south west] at (0,0) {\formatDataQubitDescription{##1}{##2}{##3}{##4}};
+\node[font=\plaquetteFontSize,align=center,anchor=south east] at (2,0) {\formatDataQubitDescription{##5}{##6}{##7}{##8}};
+\end{tikzpicture}
+}%
+\innerSquarePlaquette%
+}
+
+\newcommand{\missingPlaquette}{%
+\begin{tikzpicture}
+\draw[draw=black,thick,fill=PlaquetteMissing] (0,0) rectangle (2,2);
+\node[font=\plaquetteFontSize,align=center] at (1,1) {MISSING};
+\end{tikzpicture}
+}
