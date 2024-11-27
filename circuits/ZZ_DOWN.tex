@@ -5,8 +5,6 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
 
-\newcommand{\ket}[1]{\ensuremath{\left\vert #1 \right\rangle}}
-
 \begin{document}
 \begin{tikzpicture}
   \let\qmwires\empty
@@ -19,13 +17,17 @@
   \defwire (D4) at ({-5*\dy});
   % draw wires
   \xdef\dt{1}
-  \drawwires [\dt] (5);
+  \drawwires [\dt] (8);
   
   % Draw gates
-  \gate (S-0) [$R_{\ket{+}}$];
-  \cnot (S-1) (D1-1);
-  \cnot (S-3) (D3-3);
-  \gate (S-5) [$M_{\ket{+}}$];
+  \gate (S-0) [$R_X$];
+  \cnot (S-2) (D1-2);
+  \cnot (S-4) (D3-4);
+  \gate (S-8) [$M_X$];
+  
+  % Add virtual gates for equal padding on all circuits
+  \virtgate (D4-0);
+  \virtgate (D4-8)
   
   % Draw outputs/inputs
   % \node[xshift=-2em]  at ($(D1-0)!0.5!(D4-0)$) {$\ket{\psi}$};

@@ -35,8 +35,10 @@
 %% content in ther vertical middle, \centering will align it in the
 %% horizontal middle.
 % See https://tex.stackexchange.com/a/345214/166093
+% See also https://tex.stackexchange.com/a/12712/166093 for full explanations
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
+\newcommand{\ket}[1]{\ensuremath{\left\vert #1 \right\rangle}}
 
 \title{All plaquettes}
 \author{Adrien Suau}
@@ -205,6 +207,9 @@ may have different meanings:
 
 \subsection{Memory}
 
+The following plaquettes are used in the temporal bulk of a memory experiment. They are 
+the simplest and most standard plaquettes you might already have seen in research papers.
+
 \begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
     % Main caption
     \caption{Visual representation and definition of \texttt{Memory} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:memoryPlaquetteDefinitions}}\\
@@ -249,6 +254,13 @@ may have different meanings:
 
 \newpage
 \subsection{Initialisation}
+
+The following plaquettes are used in the first temporal round of a memory experiment. 
+They are intializing the data-qubits in the $1$-eigenstate of the initialization basis 
+$P \in \{ X, Y, Z \}$.
+Below, $R_P$ is the operation that resets a single qubit to the $1$-eigenstate of $P$. That
+definition gives $R_X \ket{\psi} \rightarrow \ket{+}$ and $R_Z \ket{\psi} \rightarrow \ket{0}$
+for any $1$-qubit quantum state \ket{\psi}.
 
 \begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
     % Main caption
@@ -295,6 +307,10 @@ may have different meanings:
 \newpage
 \subsection{Measurement}
 
+The following plaquettes are used in the last temporal round of a memory experiment. 
+They are measuring the data-qubits in the measurement basis $P \in \{ X, Y, Z \}$.
+Below, $M_P$ is the operation that measures a single qubit in the basis $P$.
+
 \begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
     % Main caption
     \caption{Visual representation and definition of \texttt{Measurement} plaquettes that need to be implemented in \texttt{tqec}.\label{tab:measurementPlaquetteDefinitions}}\\
@@ -340,6 +356,10 @@ may have different meanings:
 \newpage
 \subsection{Memory \& Initialisation}
 
+The following plaquettes are used when 2 error-correction patches need to be merged 
+together. They are ensuring that the data-qubits on the boundaries are correctly 
+initialized.
+
 \begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
 % \begin{longtable}{|c|c|} 
     % Main caption
@@ -383,6 +403,9 @@ may have different meanings:
 
 \newpage
 \subsection{Memory \& Measurement}
+
+The following plaquettes are used when 2 error-correction patches need to be split.
+They are ensuring that the data-qubits on the boundaries are correctly measured.
 
 \begin{longtable}{|N|C{.1\textwidth}|C{.3\textwidth}||N|C{.1\textwidth}|C{.3\textwidth}|} 
 % \begin{longtable}{|c|c|} 
