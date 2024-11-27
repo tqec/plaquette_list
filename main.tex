@@ -11,27 +11,8 @@
 \usepackage{hyperref}
 
 % https://tex.stackexchange.com/a/96468/166093
-\usepackage[export]{adjustbox} % Max width in include graphics
-% \newcommand{\insertPlaquette}[1]{%
-% \begin{figure}
-%     \centering
-%     \begin{subfigure}[b]{.3\textwidth}
-%         \centering
-%         \includegraphics[width=\textwidth, max height=\textwidth]{plaquettes/pdf/#1.pdf}
-%         \caption{\texttt{#1} plaquette}
-%         \label{fig:#1-plaquette}
-%     \end{subfigure}
-%     \hfill
-%     \begin{subfigure}[b]{.65\textwidth}
-%         \centering
-%         \includegraphics[width=\textwidth]{circuits/pdf/#1.pdf}
-%         \caption{\texttt{#1} circuit}
-%         \label{fig:#1-circuit}
-%     \end{subfigure}
-%     \caption{\texttt{#1} plaquette and circuit}
-%     \label{fig:#1-combined}
-% \end{figure}
-% }
+\usepackage[export]{adjustbox} % Max width/height in include graphics
+
 \newcommand{\insertPlaquette}[1]{%
     \label{tabrow:#1} &%
     \includegraphics[width=\linewidth, max height=\linewidth]{plaquettes/pdf/#1.pdf} &%
@@ -39,16 +20,13 @@
 }
 % Easily adding plaquettes to the table
 \newcommand{\internalTableLine}[3]{\texttt{#1} & \texttt{#2} & #3 & Row \ref{tabrow:#1}}
-% \newcommand{\internalTableLine}[3]{\texttt{#1} & \texttt{#2} & #3 & }
 
 % Add ability to reference rows of tables
 % See https://tex.stackexchange.com/a/356817/166093
 \newcounter{rowcntr}[table]
 \renewcommand{\therowcntr}{\thetable.\arabic{rowcntr}}
-
 % A new columntype to apply automatic stepping
 \newcolumntype{N}{>{\refstepcounter{rowcntr}\therowcntr}c}
-
 % Reset the rowcntr counter at each new tabular
 \AtBeginEnvironment{longtable}{\setcounter{rowcntr}{0}}
 
