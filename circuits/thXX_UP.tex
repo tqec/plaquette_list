@@ -22,12 +22,12 @@
   \drawwires [\dt] (5);
   
   % Draw gates
-  \gate (S-0) [$R_{\ket{0}}$];
-  \gate (D3-0) [$H$];
-  \gate (D4-0) [$H$];
-  \cnot (D3-3) (S-3);
-  \cnot (D4-4) (S-4);
-  \gate (S-5) [$M_{\ket{0}}$];
+  \gate (S-0) [$R_{\ket{+}}$];
+  \gate (D1-0) [$H$];
+  \gate (D2-0) [$H$];
+  \cnot (S-1) (D1-1);
+  \cnot (S-2) (D2-2);
+  \gate (S-5) [$M_{\ket{+}}$];
   
   % Draw outputs/inputs
   % \node[xshift=-2em]  at ($(D1-0)!0.5!(D4-0)$) {$\ket{\psi}$};

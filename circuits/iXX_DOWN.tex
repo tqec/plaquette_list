@@ -21,14 +21,10 @@
   
   % Draw gates
   \gate (S-0) [$R_X$];
-  \gate (D1-0) [$R_{P}$];
-  \gate (D2-0) [$R_{P}$];
-  \gate (D1-1) [$H$];
-  \gate (D2-1) [$H$];
+  \gate (D1-0) [$R_P$];
+  \gate (D3-0) [$R_P$];
   \cnot (S-2) (D1-2);
-  \cnot (S-3) (D2-3);
-  \gate (D1-7) [$H$];
-  \gate (D2-7) [$H$];
+  \cnot (S-4) (D3-4);
   \gate (S-8) [$M_X$];
   
   % Add virtual gates for equal padding on all circuits
